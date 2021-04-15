@@ -3,6 +3,7 @@ package main
 // go run Luna.go TOKEN SERVERID [ur code is horrible]
 
 import (
+	"time"
     "bufio"
     "os"
     "fmt" // why use log? 
@@ -22,11 +23,11 @@ func main() {
 
 func BanAll(token, guild string) {
 
-	fmt.Println("[~] Loading IDs")
+    fmt.Println("[~] Loading IDs")
 
     file, err := os.Open("Members.txt")
     if err != nil {
-	fmt.Println(err) // Print error
+		fmt.Println(err) // Print error
         return
     }
     defer file.Close()
@@ -37,7 +38,7 @@ func BanAll(token, guild string) {
     }
 
     if err := scanner.Err(); err != nil {
-		fmt.Println(err) // Print error
+	fmt.Println(err) // Print error
         return
     }
 }
@@ -62,5 +63,10 @@ func Send_Request(token, guild, user string) { // no need to add string besides 
 		fmt.Printf("Successfully Banned %s\n", user)
 		return // kill it
 	} 
+	if resp.StatusCode == 429 {
+		fmt.Println("[!] Ratelimited")
+		time.Sleep(1 * time.Second) // one second is more then enough
+		Send_Request(token, guild, user)
+	}
 
 }
