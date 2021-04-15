@@ -1,33 +1,32 @@
 package main
 
-// go run Luna.go TOKEN SERVERID
+// go run Luna.go TOKEN SERVERID [ur code is horrible]
 
 import (
     "bufio"
     "os"
-    "log"
-    "fmt"
-
+    "fmt" // why use log? 
     "net/http"
 )
 
 func main() {
-	log.Print("[~] Welcome To Luna!")
+	fmt.Println("[~] Welcome To Luna!")
 	
 	token := os.Args[1]
 	guild := os.Args[2]
 
 	BanAll(token, guild)
 
-	log.Print("[~] Finished!")
+	fmt.Println("[~] Finished!")
 }
 
-func BanAll(token string, guild string) {
+func BanAll(token, guild string) {
 
-	log.Print("[~] Loading IDs")
+	fmt.Println("[~] Loading IDs")
 
     file, err := os.Open("Members.txt")
     if err != nil {
+		fmt.Println(err) // Print error
         return
     }
     defer file.Close()
@@ -38,11 +37,12 @@ func BanAll(token string, guild string) {
     }
 
     if err := scanner.Err(); err != nil {
+		fmt.Println(err) // Print error
         return
     }
 }
 
-func Send_Request(token string, guild string, user string) {
+func Send_Request(token, guild, user string) { // no need to add string besides at the end (duh)
 	url := fmt.Sprintf("https://discord.com/api/v8/guilds/%s/bans/%s", guild, user)
 
 	req, err := http.NewRequest("PUT", url, nil)
@@ -54,11 +54,13 @@ func Send_Request(token string, guild string, user string) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		fmt.Println(err) // Print the error
 		return
 	}
 
 	if resp.StatusCode == 204 {
-		log.Print("Successfully Banned ", user)
+		fmt.Printf("Successfully Banned %s\n", user)
+		return // kill it
 	} 
 
 }
