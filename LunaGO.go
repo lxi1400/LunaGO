@@ -26,7 +26,7 @@ func BanAll(token, guild string) {
 
     file, err := os.Open("Members.txt")
     if err != nil {
-		fmt.Println(err) // Print error
+	fmt.Println(err) // Print error
         return
     }
     defer file.Close()
